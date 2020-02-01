@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -93,9 +94,7 @@ def get_openweather_weather(city_id):
 def parse_openweather_weather(json_data):
     return {
         "name": f"{json_data['name']}, {json_data['sys']['country']}",
-        "timestamp": datetime.datetime.fromtimestamp(json_data["dt"]).strftime(
-            "%Y-%m-%d %H:%M"
-        ),
+        "timestamp": datetime.fromtimestamp(json_data["dt"]).strftime("%Y-%m-%d %H:%M"),
         "description": json_data["weather"][0]["description"],
         "temp": json_data["main"]["temp"],
         "temp_max": json_data["main"]["temp_max"],
@@ -132,6 +131,13 @@ def get_stormglass_weather(lat, lng):
     url = f"{STORMGLASS_BASE_URL}?lat={lat}&lng={lng}"
     headers = {"Authorization": STORMGLASS_API_KEY}
     return parse_stormglass_weather(requests.get(url, headers=headers).json())
+
+
+def stormglass_example():
+    file = open("stormglass.json", "r")
+    contents = file.read()
+    json_data = json.loads(contents)
+    return parse_stormglass_weather(json_data)
 
 
 def average_values(measurements):
@@ -191,4 +197,5 @@ def parse_stormglass_weather(json_data):
 if __name__ == "__main__":
     # print_weather(get_openweather_weather(OPENWEATHER_FLORIANOPOLIS_ID))
     # print_weather(get_darksky_weather(-27.5, -48.5))
-    print_weather(get_stormglass_weather(-27.5, -48.5))
+    # print_weather(get_stormglass_weather(-27.5, -48.5))
+    print_weather(stormglass_example())
