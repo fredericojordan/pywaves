@@ -24,7 +24,7 @@ def fahr_to_celsius(degrees_fahrenheit):
 
 
 def direction_to_arrow(direction):
-    if direction < 22.5 or direction > 317.5:
+    if direction < 22.5 or direction > 337.5:
         return "↓"
     if direction < 67.5:
         return "↙"
