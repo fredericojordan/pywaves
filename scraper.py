@@ -49,16 +49,12 @@ def print_weather(json_data):
 
     if "timestamp" in json_data:
         print(f"Timestamp:      {json_data.get('timestamp')}")
-    if "description" in json_data:
-        print(f"Weather:        {json_data.get('description')}")
     if "temp" in json_data:
         print(f"Temperature:    {json_data.get('temp'):.1f} °C")
-    if "temp_min" in json_data:
+    if "temp_min" in json_data and "temp_max" in json_data:
         print(
             f"Temp. range:    {json_data.get('temp_min'):.1f} - {json_data.get('temp_max'):.1f} °C"
         )
-    if "humidity" in json_data:
-        print(f"Humidity:       {json_data.get('humidity')} %")
 
     if "wave_height" in json_data:
         print(f"Wave height:    {json_data.get('wave_height'):.1f} m")
@@ -66,7 +62,7 @@ def print_weather(json_data):
         dir = json_data.get("wave_direction")
         print(f"Wave direction: {dir:.0f} {direction_to_arrow(dir)}")
     if "wave_period" in json_data:
-        print(f"Wave period:    {json_data.get('wave_period'):.1f}")
+        print(f"Wave period:    {json_data.get('wave_period'):.1f} s")
 
     if "wind_speed" in json_data:
         print(f"Wind speed:     {json_data.get('wind_speed'):.1f} m/s")
@@ -76,6 +72,10 @@ def print_weather(json_data):
         dir = json_data.get("wind_direction")
         print(f"Wind direction: {dir:.0f} {direction_to_arrow(dir)}")
 
+    if "description" in json_data:
+        print(f"Weather:        {json_data.get('description')}")
+    if "humidity" in json_data:
+        print(f"Humidity:       {json_data.get('humidity'):.0f} %")
     if "cloud_coverage" in json_data:
         print(f"Cloud cover:    {json_data.get('cloud_coverage'):.0f} %")
     print("-" * len(title))
@@ -134,9 +134,7 @@ def get_stormglass_weather(lat, lng):
 
 
 def stormglass_example():
-    file = open("stormglass.json", "r")
-    contents = file.read()
-    json_data = json.loads(contents)
+    json_data = json.loads(open("stormglass.json", "r").read())
     return parse_stormglass_weather(json_data)
 
 
