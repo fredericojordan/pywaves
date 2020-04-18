@@ -12,6 +12,7 @@
 
       function drawCharts() {
           drawWaveChart();
+          drawWavePeriodChart();
           drawWindChart();
           drawTemperatureChart();
       }
@@ -30,6 +31,24 @@
         };
 
         var wave_chart = new google.visualization.LineChart(document.getElementById('wave_chart'));
+
+        wave_chart.draw(wave_data, options);
+      }
+
+      function drawWavePeriodChart() {
+        var wave_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Wave Period'],
+            {% for point in original.ordered_data_points %}{% if point.wave_period %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_period }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Wave Period (seconds)',
+          curveType: 'function',
+          legend: { position: 'none' }
+        };
+
+        var wave_chart = new google.visualization.LineChart(document.getElementById('wave_period_chart'));
 
         wave_chart.draw(wave_data, options);
       }
@@ -76,6 +95,7 @@
 {% block field_sets %}
 {{ block.super }}
 <div id="wave_chart" style="margin-bottom: 30px;"></div>
+<div id="wave_period_chart" style="margin-bottom: 30px;"></div>
 <div id="wind_chart" style="margin-bottom: 30px;"></div>
 <div id="temperature_chart" style="margin-bottom: 30px;"></div>
 {% endblock %}
