@@ -1,0 +1,3 @@
+# Linter
+black==19.10b0
+pre-commit==2.0.1

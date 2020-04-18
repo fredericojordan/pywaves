@@ -1,21 +1,6 @@
-import json
-import os
-from datetime import datetime
-
 import requests
-from dotenv import load_dotenv
+from django.conf import settings
 
-load_dotenv()
-
-
-OPENWEATHER_APP_ID = os.getenv("OPENWEATHER_APP_ID")
-OPENWEATHER_BASE_URL = "http://api.openweathermap.org/data/2.5"
-OPENWEATHER_FLORIANOPOLIS_ID = "3463237"
-
-DARKSKY_SECRET_KEY = os.getenv("DARKSKY_SECRET_KEY")
-DARKSKY_BASE_URL = "https://api.darksky.net/forecast"
-
-STORMGLASS_API_KEY = os.getenv("STORMGLASS_API_KEY")
 STORMGLASS_BASE_URL = "https://api.stormglass.io/v1/weather/point"
 
 
@@ -81,64 +66,15 @@ def print_weather(json_data):
     print("-" * len(title))
 
 
-def get_openweather_forecast(city_id):
-    url = f"{OPENWEATHER_BASE_URL}/forecast?id={city_id}&APPID={OPENWEATHER_APP_ID}&units=metric"
-    return requests.get(url).json()
-
-
-def get_openweather_weather(city_id):
-    url = f"{OPENWEATHER_BASE_URL}/weather?id={city_id}&APPID={OPENWEATHER_APP_ID}&units=metric"
-    return parse_openweather_weather(requests.get(url).json())
-
-
-def parse_openweather_weather(json_data):
-    return {
-        "name": f"{json_data['name']}, {json_data['sys']['country']}",
-        "timestamp": datetime.fromtimestamp(json_data["dt"]).strftime("%Y-%m-%d %H:%M"),
-        "description": json_data["weather"][0]["description"],
-        "temp": json_data["main"]["temp"],
-        "temp_max": json_data["main"]["temp_max"],
-        "temp_min": json_data["main"]["temp_min"],
-        "humidity": json_data["main"]["humidity"],
-        "wind_speed": json_data["wind"]["speed"],
-        "cloud_coverage": json_data["clouds"]["all"],
-    }
-
-
-def get_darksky_weather(lat, lng):
-    url = f"{DARKSKY_BASE_URL}/{DARKSKY_SECRET_KEY}/{lat},{lng}"
-    return parse_darksky_weather(requests.get(url).json())
-
-
-def parse_darksky_weather(json_data):
-    return {
-        "name": f"{json_data['latitude']:.1f}, {json_data['longitude']:.1f}",
-        "timestamp": datetime.fromtimestamp(json_data["currently"]["time"]).strftime(
-            "%Y-%m-%d %H:%M"
-        ),
-        "description": json_data["currently"]["summary"],
-        "temp": fahr_to_celsius(json_data["currently"]["temperature"]),
-        "temp_max": fahr_to_celsius(json_data["daily"]["data"][0]["temperatureHigh"]),
-        "temp_min": fahr_to_celsius(json_data["daily"]["data"][0]["temperatureLow"]),
-        "humidity": json_data["currently"]["humidity"],
-        "wind_speed": json_data["currently"]["windSpeed"],
-        "wind_gusts": json_data["currently"]["windGust"],
-        "cloud_coverage": 100 * json_data["currently"]["cloudCover"],
-    }
-
-
 def get_stormglass_weather(lat, lng):
     url = f"{STORMGLASS_BASE_URL}?lat={lat}&lng={lng}"
-    headers = {"Authorization": STORMGLASS_API_KEY}
-    return parse_stormglass_weather(requests.get(url, headers=headers).json())
+    headers = {"Authorization": settings.STORMGLASS_API_KEY}
+    return requests.get(url, headers=headers).json()
 
 
-def stormglass_example():
-    json_data = json.loads(open("stormglass.json", "r").read())
-    return parse_stormglass_weather(json_data)
-
-
-def average_values(measurements):
+def average_sources(measurements):
+    if not measurements or len(measurements) == 0:
+        return None
     return sum([m["value"] for m in measurements]) / len(measurements)
 
 
@@ -176,24 +112,16 @@ def parse_stormglass_weather(json_data):
     first_data_point = json_data["hours"][0]
     return {
         "name": f"{json_data['meta']['lat']:.1f}, {json_data['meta']['lng']:.1f}",
-        "timestamp": datetime.fromisoformat(first_data_point["time"]).strftime(
-            "%Y-%m-%d %H:%M"
-        ),
-        "temp": average_values(first_data_point["airTemperature"]),
-        "humidity": average_values(first_data_point["humidity"]),
-        "wind_speed": average_values(first_data_point["windSpeed"]),
-        "wind_gusts": average_values(first_data_point["gust"]),
-        "wind_direction": average_values(first_data_point["windDirection"]),
-        "wave_height": average_values(first_data_point["waveHeight"]),
-        "wave_period": average_values(first_data_point["wavePeriod"]),
-        "wave_direction": average_values(first_data_point["waveDirection"]),
-        "water_temperature": average_values(first_data_point["waterTemperature"]),
-        "cloud_coverage": average_values(first_data_point["cloudCover"]),
+        "timestamp": first_data_point["time"],
+        "temperatures": average_sources(first_data_point["airTemperature"]),
+        "humidity": average_sources(first_data_point["humidity"]),
+        "wind_speed": average_sources(first_data_point["windSpeed"]),
+        "wind_gusts": average_sources(first_data_point["gust"]),
+        "wind_direction": average_sources(first_data_point["windDirection"]),
+        "wave_height": average_sources(first_data_point["waveHeight"]),
+        "wave_period": average_sources(first_data_point["wavePeriod"]),
+        "wave_direction": average_sources(first_data_point["waveDirection"]),
+        "water_temperature": average_sources(first_data_point["waterTemperature"]),
+        "cloud_coverage": average_sources(first_data_point["cloudCover"]),
+        "_raw_data": json_data,
     }
-
-
-if __name__ == "__main__":
-    # print_weather(get_openweather_weather(OPENWEATHER_FLORIANOPOLIS_ID))
-    # print_weather(get_darksky_weather(-27.5, -48.5))
-    # print_weather(get_stormglass_weather(-27.5, -48.5))
-    print_weather(stormglass_example())
