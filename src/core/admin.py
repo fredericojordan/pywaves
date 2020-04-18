@@ -16,11 +16,17 @@ class SpotAdmin(OSMGeoAdmin):
             forecasts.append(spot.save_forecast())
 
         if len(forecasts) == 1:
-            self.message_user(request, f"'{forecasts[0].spot}' forecast #{forecasts[0].pk} has been generated!")
+            self.message_user(
+                request,
+                f"'{forecasts[0].spot}' forecast #{forecasts[0].pk} has been generated!",
+            )
         if len(forecasts) > 1:
-            self.message_user(request, f"{len(forecasts)} forecasts have been generated!")
+            self.message_user(
+                request, f"{len(forecasts)} forecasts have been generated!"
+            )
 
     get_forecast.short_description = "Fetch spot forecast via API and save results"
+
 
 class ForecastAdmin(ModelAdmin):
     readonly_fields = ("spot", "created", "raw_data")
