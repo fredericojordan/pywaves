@@ -1,0 +1,81 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript" src="https://www.google.com/jsapi" xmlns:margin-bottom="http://www.w3.org/1999/xhtml"></script>
+    <script type="text/javascript">
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawCharts);
+
+      function drawCharts() {
+          drawWaveChart();
+          drawWindChart();
+          drawTemperatureChart();
+      }
+
+      function drawWaveChart() {
+        var wave_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Wave Height'],
+            {% for point in original.ordered_data_points %}{% if point.wave_height %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_height }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Wave Height (meters)',
+          curveType: 'function',
+          legend: { position: 'none' }
+        };
+
+        var wave_chart = new google.visualization.LineChart(document.getElementById('wave_chart'));
+
+        wave_chart.draw(wave_data, options);
+      }
+
+      function drawWindChart() {
+        var wind_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Wind Speed', 'Wind Gusts'],
+            {% for point in original.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h', {{ point.wind_speed }}, {{ point.wind_gusts }}],
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Wind Speed (meters per second)',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var wind_chart = new google.visualization.LineChart(document.getElementById('wind_chart'));
+
+        wind_chart.draw(wind_data, options);
+      }
+
+      function drawTemperatureChart() {
+        var temperature_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Temperature'],
+            {% for point in original.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h', {{ point.temperature }},],
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Temperature (celsius)',
+          curveType: 'function',
+          legend: { position: 'none' }
+        };
+
+        var temperature_chart = new google.visualization.LineChart(document.getElementById('temperature_chart'));
+
+        temperature_chart.draw(temperature_data, options);
+      }
+    </script>
+{% endblock %}
+
+
+{% block field_sets %}
+{{ block.super }}
+<div id="wave_chart" style="margin-bottom: 30px;"></div>
+<div id="wind_chart" style="margin-bottom: 30px;"></div>
+<div id="temperature_chart" style="margin-bottom: 30px;"></div>
+{% endblock %}
