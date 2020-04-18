@@ -43,7 +43,6 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_extensions",
     "storages",
-    "drf_yasg",
 ]
 
 PROJECT_APPS = ["users", "core"]

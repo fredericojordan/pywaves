@@ -30,6 +30,3 @@ sentry-sdk==0.13.2
 
 # File Upload
 boto3==1.10.14
-
-# Docs
-drf-yasg==1.17.0
