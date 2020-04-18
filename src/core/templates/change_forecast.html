@@ -56,7 +56,7 @@
       function drawWindChart() {
         var wind_data = google.visualization.arrayToDataTable([
           ['Timestamp', 'Wind Speed', 'Wind Gusts'],
-            {% for point in original.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h', {{ point.wind_speed }}, {{ point.wind_gusts }}],
+            {% for point in original.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h {{ point.wind_direction_arrow }}', {{ point.wind_speed }}, {{ point.wind_gusts }}],
             {% endfor %}
         ]);
 
