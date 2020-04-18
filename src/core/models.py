@@ -69,11 +69,7 @@ class Spot(TimeStampedModel):
     location = gis_models.PointField(blank=False, null=False)
 
     def __str__(self):
-        coords = f"{self.latitude:.1f}, {self.longitude:.1f}"
-
-        if self.name:
-            return f"{self.name} ({coords})"
-        return f"({coords})"
+        return f"{self.name}"
 
     @property
     def longitude(self):
@@ -110,4 +106,4 @@ class Spot(TimeStampedModel):
                 for entry in json_data.get("hours", [])
             ]
         )
-        return json_data
+        return forecast
