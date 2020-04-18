@@ -4,7 +4,12 @@ from django.utils.translation import ugettext as _
 from django_extensions.db.fields.json import JSONField
 from django_extensions.db.models import TimeStampedModel
 
-from utils.stormglass import get_stormglass_weather, print_weather, average_sources
+from utils.stormglass import (
+    get_stormglass_weather,
+    print_weather,
+    average_sources,
+    direction_to_arrow,
+)
 
 
 class Forecast(TimeStampedModel):
@@ -62,6 +67,14 @@ class DataPoint(TimeStampedModel):
 
     def __str__(self):
         return f"{self.forecast.spot} @ {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+
+    @property
+    def wave_direction_arrow(self):
+        return direction_to_arrow(self.wave_direction)
+
+    @property
+    def wind_direction_arrow(self):
+        return direction_to_arrow(self.wind_direction)
 
 
 class Spot(TimeStampedModel):
