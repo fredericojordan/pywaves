@@ -15,7 +15,7 @@ else
 
     echo Starting Gunicorn
     exec gunicorn app.wsgi \
-        --bind 0.0.0.0:8000 \
+        --bind 0.0.0.0:$PORT \
         --chdir /app/src \
         --workers 3 \
         --log-level=info
