@@ -7,11 +7,8 @@ from django.contrib.auth.models import Group, Permission
 def create_security_group(_apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
-    providers, _created = Group.objects.using(db_alias).get_or_create(
-        name="PyWave User"
-    )
-
-    providers.permissions.set(
+    group, _created = Group.objects.using(db_alias).get_or_create(name="PyWave User")
+    group.permissions.set(
         Permission.objects.filter(codename__in=["view_forecast", "view_spot",])
     )
 
