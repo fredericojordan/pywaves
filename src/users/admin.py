@@ -1,8 +1,9 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
 from users.forms import UserCreationForm, UserChangeForm
-from users.models import User
+from users.models import User, Surfer
 
 
 class UserAdmin(DjangoUserAdmin):
@@ -36,4 +37,11 @@ class UserAdmin(DjangoUserAdmin):
     filter_horizontal = ()
 
 
+class SurferAdmin(ModelAdmin):
+    list_display = ("id", "full_name", "phone_number")
+    list_filter = ("created",)
+    search_fields = ("full_name", "phone_number")
+
+
 admin.site.register(User, UserAdmin)
+admin.site.register(Surfer, SurferAdmin)
