@@ -4,6 +4,9 @@ python-dotenv==0.10.5
 # Scraping
 requests==2.22.0
 
+# Twilio
+twilio==6.38.1
+
 # Django
 Django==2.2.10
 django-cors-headers==3.2.1
