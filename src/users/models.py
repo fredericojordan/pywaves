@@ -56,6 +56,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Surfer(TimeStampedModel):
-    user = models.ForeignKey("users.User", null=True, on_delete=models.SET_NULL)
-    full_name = models.CharField(_("Full name"), max_length=64)
+    user = models.ForeignKey(
+        "users.User", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    full_name = models.CharField(_("Full name"), max_length=64, null=True, blank=True)
     phone_number = models.CharField(_("Phone number"), max_length=30)
+
+    def __str__(self):
+        if self.full_name:
+            return f"{self.full_name} ({self.phone_number})"
+        return f"({self.phone_number})"
