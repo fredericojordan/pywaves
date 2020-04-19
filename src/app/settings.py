@@ -46,7 +46,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg",
 ]
 
-PROJECT_APPS = ["users", "core"]
+PROJECT_APPS = ["users", "core", "messaging"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 

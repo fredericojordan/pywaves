@@ -1,0 +1,13 @@
+{
+  "SmsSid": "SM428d5f7f77e345a1a25373160f32b7b6",
+  "SmsStatus": "sent",
+  "MessageStatus": "sent",
+  "ChannelToAddress": "+554898765XXXX",
+  "To": "whatsapp:+5548987654321",
+  "ChannelPrefix": "whatsapp",
+  "MessageSid": "SM428d5f7f77e345a1a25373160f32b7b6",
+  "AccountSid": "AC5608194e9010de3e61a933ac9f808a9c",
+  "From": "whatsapp:+14155238886",
+  "ApiVersion": "2010-04-01",
+  "ChannelInstallSid": "XEcc20d939f803ee381f2442185d0d5dc5"
+}

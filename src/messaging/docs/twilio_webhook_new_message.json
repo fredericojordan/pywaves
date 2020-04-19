@@ -1,0 +1,13 @@
+{
+  "SmsMessageSid": "SM80a97a4108e302f0252324646f6b35c2",
+  "NumMedia": "0",
+  "SmsSid": "SM80a97a4108e302f0252324646f6b35c2",
+  "SmsStatus": "received",
+  "Body": "This is a public service announcement, this is only a test.",
+  "To": "whatsapp:+14155238886",
+  "NumSegments": "1",
+  "MessageSid": "SM80a97a4108e302f0252324646f6b35c2",
+  "AccountSid": "AC5608194e9010de3e61a933ac9f808a9c",
+  "From": "whatsapp:+5548987654321",
+  "ApiVersion": "2010-04-01"
+}
