@@ -43,9 +43,10 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_extensions",
     "storages",
+    "drf_yasg",
 ]
 
-PROJECT_APPS = ["users", "core"]
+PROJECT_APPS = ["users", "core", "messaging"]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
@@ -142,3 +143,7 @@ if not DEBUG:
 
 # Storm Glass
 STORMGLASS_API_KEY = env("STORMGLASS_API_KEY")
+
+# Twilio
+TWILIO_ACCOUNT_SID = env("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = env("TWILIO_AUTH_TOKEN")

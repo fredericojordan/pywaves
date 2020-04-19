@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.models import TimeStampedModel
 
 
 class UserManager(BaseUserManager):
@@ -52,3 +53,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+
+class Surfer(TimeStampedModel):
+    user = models.ForeignKey("users.User", null=True, on_delete=models.SET_NULL)
+    full_name = models.CharField(_("Full name"), max_length=64)
+    phone_number = models.CharField(_("Phone number"), max_length=30)
