@@ -36,6 +36,7 @@ class SpotAdmin(OSMGeoAdmin):
             )
 
     generate_forecast.short_description = "Fetch spot forecast via API and save results"
+    generate_forecast.allowed_permissions = ("change",)
 
 
 class ForecastAdmin(ModelAdmin):
