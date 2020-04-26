@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block extrahead %}
+<script type="text/javascript" src="https://www.google.com/jsapi" xmlns:margin-bottom="http://www.w3.org/1999/xhtml"></script>
+    <script type="text/javascript">
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawCharts);
+
+      function drawCharts() {
+          drawWaveChart();
+      }
+
+      function drawWaveChart() {
+        var wave_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Wave Height'],
+            {% for point in forecast.ordered_data_points %}{% if point.wave_height %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_height }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Wave Height (meters)',
+          curveType: 'function',
+          legend: { position: 'none' }
+        };
+
+        var wave_chart = new google.visualization.LineChart(document.getElementById('wave_chart'));
+
+        wave_chart.draw(wave_data, options);
+      }
+    </script>
+{% endblock %}
+
+
+{% block content %}
+    <header>
+      <section class="container center">
+        <div class="surf-api-logo">
+          <a href="http://pywaves.herokuapp.com/">
+            {% load static %}
+	          <img src="{% static "images/chicken-joe.png" %}" alt="Chicken Joe"/>
+	          <img src="{% static "images/surf-api-logo.png" %}" alt="Surf API Logo"/>
+          </a>
+        </div>
+      </section>
+    </header>
+    <main role="main" class="container">
+      <section class="charts">
+      <div id="wave_chart" style="width: 75%;"></div>
+	    <p class="name">Pico: {{ forecast.spot.name }}</p>
+	    <p>{{ forecast.created }} UTC</p>
+    </section>
+    </main>
+    <section class="footer center">
+      <a href="https://github.com/fredericojordan/pywaves/" class="github-link">
+        <img src="{% static "images/github.png" %}" alt="Github Repo"/>
+      </a>
+    </section>
+{% endblock %}

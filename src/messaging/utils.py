@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
 from twilio.rest import Client
 
 CLIENT = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
