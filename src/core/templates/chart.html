@@ -11,6 +11,9 @@
 
       function drawCharts() {
           drawWaveChart();
+          drawWavePeriodChart();
+          drawWindChart();
+          drawTemperatureChart();
       }
 
       function drawWaveChart() {
@@ -30,6 +33,60 @@
 
         wave_chart.draw(wave_data, options);
       }
+
+      function drawWavePeriodChart() {
+        var wave_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Wave Period'],
+            {% for point in forecast.ordered_data_points %}{% if point.wave_period %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_period }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Wave Period (seconds)',
+          curveType: 'function',
+          legend: { position: 'none' }
+        };
+
+        var wave_chart = new google.visualization.LineChart(document.getElementById('wave_period_chart'));
+
+        wave_chart.draw(wave_data, options);
+      }
+
+      function drawWindChart() {
+        var wind_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Wind Speed', 'Wind Gusts'],
+            {% for point in forecast.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h {{ point.wind_direction_arrow }}', {{ point.wind_speed }}, {{ point.wind_gusts }}],
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Wind Speed (meters per second)',
+          curveType: 'function',
+          legend: { position: 'bottom' }
+        };
+
+        var wind_chart = new google.visualization.LineChart(document.getElementById('wind_chart'));
+
+        wind_chart.draw(wind_data, options);
+      }
+
+      function drawTemperatureChart() {
+        var temperature_data = google.visualization.arrayToDataTable([
+          ['Timestamp', 'Temperature'],
+            {% for point in forecast.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h', {{ point.temperature }},],
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Temperature (celsius)',
+          curveType: 'function',
+          legend: { position: 'none' }
+        };
+
+        var temperature_chart = new google.visualization.LineChart(document.getElementById('temperature_chart'));
+
+        temperature_chart.draw(temperature_data, options);
+      }
     </script>
 {% endblock %}
 
@@ -48,8 +105,11 @@
     </header>
     <main role="main" class="container">
       <section class="charts">
-      <div id="wave_chart" style="width: 75%;"></div>
-	    <p class="name">Pico: {{ forecast.spot.name }}</p>
+      <div class="chart" id="wave_chart"></div>
+      <div class="chart" id="wave_period_chart"></div>
+      <div class="chart" id="wind_chart"></div>
+      <div class="chart" id="temperature_chart"></div>
+	    <p class="name">{{ forecast.spot.name }}</p>
 	    <p>{{ forecast.created }} UTC</p>
     </section>
     </main>
