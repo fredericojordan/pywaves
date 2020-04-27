@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models as gis_models
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext as _
 from django_extensions.db.fields.json import JSONField
 from django_extensions.db.models import TimeStampedModel
@@ -79,6 +80,11 @@ class DataPoint(TimeStampedModel):
     @property
     def wind_direction_arrow(self):
         return direction_to_arrow(self.wind_direction)
+
+    @property
+    def within_30_min(self):
+        timediff = timezone.now() - self.timestamp
+        return abs(timediff.total_seconds()) < 30 * 60
 
 
 class Spot(TimeStampedModel):
