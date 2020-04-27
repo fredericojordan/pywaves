@@ -28,6 +28,10 @@ class Forecast(TimeStampedModel):
         return self.data_points.order_by("timestamp")
 
     @property
+    def three_day_forecast(self):
+        return self.data_points.order_by("timestamp")[:73]
+
+    @property
     def report(self):
         return (
             self.data_points.order_by("timestamp")

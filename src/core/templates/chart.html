@@ -19,14 +19,19 @@
       function drawWaveChart() {
         var wave_data = google.visualization.arrayToDataTable([
           ['Timestamp', 'Wave Height'],
-            {% for point in forecast.ordered_data_points %}{% if point.wave_height %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_height }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
+            {% for point in forecast.three_day_forecast %}{% if point.wave_height %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_height }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
             {% endfor %}
         ]);
 
         var options = {
           title: 'Wave Height (meters)',
+          titleTextStyle: {
+            color: '#babaca',
+            fontSize: 20,
+          },
           curveType: 'function',
-          legend: { position: 'none' }
+          legend: { position: 'none' },
+          hAxis: { showTextEvery: 12 }
         };
 
         var wave_chart = new google.visualization.LineChart(document.getElementById('wave_chart'));
@@ -37,14 +42,19 @@
       function drawWavePeriodChart() {
         var wave_data = google.visualization.arrayToDataTable([
           ['Timestamp', 'Wave Period'],
-            {% for point in forecast.ordered_data_points %}{% if point.wave_period %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_period }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
+            {% for point in forecast.three_day_forecast %}{% if point.wave_period %}['{{ point.timestamp|date:"D H" }}h', {{ point.wave_period }}],{% else %}['{{ point.timestamp|date:"D H" }}h', 0],{% endif %}
             {% endfor %}
         ]);
 
         var options = {
           title: 'Wave Period (seconds)',
+          titleTextStyle: {
+            color: '#babaca',
+            fontSize: 20,
+          },
           curveType: 'function',
-          legend: { position: 'none' }
+          legend: { position: 'none' },
+          hAxis: { showTextEvery: 12 }
         };
 
         var wave_chart = new google.visualization.LineChart(document.getElementById('wave_period_chart'));
@@ -55,14 +65,19 @@
       function drawWindChart() {
         var wind_data = google.visualization.arrayToDataTable([
           ['Timestamp', 'Wind Speed', 'Wind Gusts'],
-            {% for point in forecast.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h {{ point.wind_direction_arrow }}', {{ point.wind_speed }}, {{ point.wind_gusts }}],
+            {% for point in forecast.three_day_forecast %}['{{ point.timestamp|date:"D H" }}h {{ point.wind_direction_arrow }}', {{ point.wind_speed }}, {{ point.wind_gusts }}],
             {% endfor %}
         ]);
 
         var options = {
           title: 'Wind Speed (meters per second)',
+          titleTextStyle: {
+            color: '#babaca',
+            fontSize: 20,
+          },
           curveType: 'function',
-          legend: { position: 'bottom' }
+          legend: { position: 'bottom' },
+          hAxis: { showTextEvery: 12 }
         };
 
         var wind_chart = new google.visualization.LineChart(document.getElementById('wind_chart'));
@@ -73,14 +88,19 @@
       function drawTemperatureChart() {
         var temperature_data = google.visualization.arrayToDataTable([
           ['Timestamp', 'Temperature'],
-            {% for point in forecast.ordered_data_points %}['{{ point.timestamp|date:"D H" }}h', {{ point.temperature }},],
+            {% for point in forecast.three_day_forecast %}['{{ point.timestamp|date:"D H" }}h', {{ point.temperature }},],
             {% endfor %}
         ]);
 
         var options = {
           title: 'Temperature (celsius)',
+          titleTextStyle: {
+            color: '#babaca',
+            fontSize: 20,
+          },
           curveType: 'function',
-          legend: { position: 'none' }
+          legend: { position: 'none' },
+          hAxis: { showTextEvery: 12 }
         };
 
         var temperature_chart = new google.visualization.LineChart(document.getElementById('temperature_chart'));

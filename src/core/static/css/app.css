@@ -92,6 +92,10 @@ select {
   font-weight: 600;
 }
 
+.chart {
+  margin-bottom: 15px;
+}
+
 /* Logo */
 .surf-api-logo a {
   display: flex;
