@@ -93,7 +93,7 @@ local.env
 docker/db/pgdata/
 
 # Static Files
-static/
+src/static/
 
 # Database data
 docker/db/pgdata/
